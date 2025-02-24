@@ -33,6 +33,13 @@ public class Products {
         this.status = status;
     }
 
+    public Products(int productID, String productName, String image, double price) {
+        this.productID = productID;
+        this.productName = productName;
+        this.image = image;
+        this.price = price;
+    }
+
     public int getProductID() {
         return productID;
     }
@@ -110,7 +117,4 @@ public class Products {
         return "Products{" + "productID=" + productID + ", productName=" + productName + ", image=" + image + ", price=" + price + ", quantity=" + quantity + ", category=" + category + ", importDate=" + importDate + ", usingDate=" + usingDate + ", status=" + status + '}';
     }
 
-    
-    
-    
 }
