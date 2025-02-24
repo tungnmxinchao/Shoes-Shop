@@ -22,11 +22,7 @@ public class ProductDAO extends DBContext {
     }
 
     public static void main(String[] args) {
-        ProductDAO productDAO = new ProductDAO();
 
-        int p = productDAO.findTotalRecord();
-
-        System.out.println(p);
     }
 
     public int findTotalRecord() {
@@ -34,6 +30,27 @@ public class ProductDAO extends DBContext {
                 + "where p.[status] = 1 ";
         try (Connection connection = new DBContext().connection) {
             ps = connection.prepareStatement(sql);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return -1;
+    }
+
+    public int findTotalBySearch(String name) {
+        String sql = "select count(p.productID) from tblProduct p\n"
+                + "join tblCategory c\n"
+                + "on p.categoryID = c.categoryID\n"
+                + "where p.[status] = 1 and p.productName like ?";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+
+            ps.setString(1, "%" + name + "%");
 
             rs = ps.executeQuery();
 
@@ -63,21 +80,7 @@ public class ProductDAO extends DBContext {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                int productID = rs.getInt("productID");
-                String productName = rs.getString("productName");
-                String image = rs.getString("image");
-                double price = rs.getDouble("price");
-                int quantity = rs.getInt("quantity");
-                String categoryID = rs.getString("categoryID");
-                Date importDate = rs.getDate("importDate");
-                Date usingDate = rs.getDate("usingDate");
-                int status = rs.getInt("status");
-
-                String categoryName = rs.getString("categoryName");
-
-                Categories cateogy = new Categories(categoryID, categoryName, "");
-
-                Products product = new Products(productID, productName, image, price, quantity, cateogy, importDate, usingDate, status);
+                Products product = getProductFromResultSet(rs);
                 vectorProduct.add(product);
             }
 
@@ -87,6 +90,53 @@ public class ProductDAO extends DBContext {
 
         return vectorProduct;
 
+    }
+
+    public Vector<Products> searchByName(String name, int page) {
+        String sql = "select * from tblProduct p\n"
+                + "join tblCategory c\n"
+                + "on p.categoryID = c.categoryID\n"
+                + "where p.[status] = 1 and p.productName like ?\n"
+                + "ORDER BY p.ProductID\n"
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;";
+
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+
+            ps.setString(1, "%" + name + "%");
+            ps.setInt(2, (page - 1) * RECORD_PER_PAGE);
+            ps.setInt(3, RECORD_PER_PAGE);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Products product = getProductFromResultSet(rs);
+                vectorProduct.add(product);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        return vectorProduct;
+    }
+
+    private Products getProductFromResultSet(ResultSet rs) throws SQLException {
+        int productID = rs.getInt("productID");
+        String productName = rs.getString("productName");
+        String image = rs.getString("image");
+        double price = rs.getDouble("price");
+        int quantity = rs.getInt("quantity");
+        String categoryID = rs.getString("categoryID");
+        Date importDate = rs.getDate("importDate");
+        Date usingDate = rs.getDate("usingDate");
+        int status = rs.getInt("status");
+
+        String categoryName = rs.getString("categoryName");
+
+        Categories category = new Categories(categoryID, categoryName, "");
+
+        return new Products(productID, productName, image, price, quantity, category, importDate, usingDate, status);
     }
 
     public void insertProduct(Products products) {

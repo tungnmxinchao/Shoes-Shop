@@ -32,7 +32,7 @@
 
         <!--Pages-->
         <c:forEach begin="1" end="${pageControl.totalPage}" var="pageNumber">
-            <li class="page-item">
+            <li class="page-item ${currentPage == pageNumber ? 'active' : ""} ">
                 <a class="page-link" href="${pageControl.urlPattern}page=${pageNumber}">${pageNumber}</a>
             </li>
         </c:forEach>
