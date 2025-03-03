@@ -23,6 +23,40 @@ public class CartDAO extends DBContext {
         }
     }
 
+    public Cart getCartByUserIdAndProductId(int userId, int productId) {
+        String sql = "select * from tblCart c\n"
+                + "join tblProduct p\n"
+                + "on c.productID = p.productID\n"
+                + "where c.productId = ? and c.userId = ?";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+
+            ps.setInt(1, productId);
+            ps.setInt(2, userId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int cartID = rs.getInt("cartID");
+                int productID = rs.getInt("productID");
+                int quantity = rs.getInt("quantity");
+                Timestamp addedAt = rs.getTimestamp("addedAt");
+
+                String productName = rs.getString("productName");
+                double price = rs.getDouble("price");
+                String productImg = rs.getString("image");
+
+                Products product = new Products(productID, productName, productImg, price);
+                Cart cart = new Cart(cartID, userId, quantity, addedAt, product);
+
+                return cart;
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Lỗi khi lấy giỏ hàng: " + e.getMessage());
+        }
+
+        return null;
+    }
+
     public void addToCart(int userID, int productID, int quantity) {
         String sql = "INSERT INTO tblCart (userID, productID, quantity, addedAt) VALUES (?, ?, ?, GETDATE())";
         try (Connection connection = new DBContext().connection) {
@@ -51,6 +85,23 @@ public class CartDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println("❌ Lỗi khi xóa sản phẩm khỏi giỏ hàng: " + e.getMessage());
         }
+    }
+
+    public boolean clearCartByUserId(int id) {
+        String sql = "DELETE FROM tblCart WHERE userID = ?";
+
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            
+            int rowsDeleted = ps.executeUpdate();
+            if (rowsDeleted > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Lỗi khi xóa sản phẩm khỏi giỏ hàng: " + e.getMessage());
+        }
+        return false;
     }
 
     public void updateCart(int cartID, int quantity) {

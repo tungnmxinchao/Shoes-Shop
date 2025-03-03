@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <section class="product-section spad">
     <div class="container">
@@ -40,8 +41,10 @@
                         </figure>
                         <div class="product-info text-center">
                             <h6>${product.productName}</h6>
-                            <p>$${product.price}</p>
-                            <a href="#" class="site-btn btn-line">ADD TO CART</a>
+                            <p>
+                            <fmt:formatNumber value="${product.price}" type="currency" currencyCode="VND" pattern="#,##0 ₫" />
+                            </p>
+                            <a href="addToCart?productId=${product.productID}" class="site-btn btn-line">ADD TO CART</a>
                         </div>
                     </div>
                 </div>
