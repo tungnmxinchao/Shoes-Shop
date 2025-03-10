@@ -205,7 +205,7 @@
                                               type="number" 
                                               pattern="#,##0" /> VNĐ</span></li>
                         </ul>
-                        <a class="site-btn btn-full" href="checkout.html">Proceed to checkout</a>
+                        <a class="site-btn btn-full" href="insertOrder">Proceed to checkout</a>
                     </div>
                 </div>
             </div>

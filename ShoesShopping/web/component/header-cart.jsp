@@ -16,12 +16,12 @@
             <i class="fa fa-bars"></i>
         </div>
         <div class="header-right">
-            <a href="cart.html" class="card-bag"><img src="template/img/icons/bag.png" alt=""><span>2</span></a>
+            <a href="viewCart" class="card-bag"><img src="template/img/icons/bag.png" alt=""><span>2</span></a>
             <a href="#" class="search"><img src="template/img/icons/search.png" alt=""></a>
         </div>
         <!-- site menu -->
         <ul class="main-menu">
-            <li><a href="index.html">Home</a></li>
+            <li><a href="home">Home</a></li>
             <li><a href="#">Woman</a></li>
             <li><a href="#">Man</a></li>
             <li><a href="#">LookBook</a></li>
