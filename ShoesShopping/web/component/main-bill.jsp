@@ -129,7 +129,7 @@
                         <fmt:formatNumber value="${order.total}" 
                                           type="number" 
                                           pattern="#,##0" /> VNĐ
-                    </p>
+                    </p>                  
                     <p><strong>Full Name:</strong> nguyen manh tung</p>
                     <p><strong>Email:</strong> thichsao11@gmail.com</p>
                     <p><strong>Phone:</strong> 0849978689</p>
@@ -137,7 +137,8 @@
 
                 <div class="payment-button" style="text-align: right;">
                     <form action="createOrder" method="post">
-                         <input type="hidden" name="amount" value="${order.total}">  
+                        <input type="hidden" name="email" value="thichsao11@gmail.com">  
+                        <input type="hidden" name="amount" value="${order.total}">  
                         <input type="hidden" name="orderId" value="${order.orderId}">                   
                         <button type="submit" class="site-btn">Proceed to Payment</button>
                     </form>

@@ -15,10 +15,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.json.JSONObject;
+import service.EmailService;
+import strategy.GmailSender;
 
 /**
  *
@@ -31,13 +37,20 @@ public class CallbackServlet extends HttpServlet {
     private static final String KEY2 = ZaloPayConfig.KEY2;
     private Mac HmacSHA256;
 
+    private EmailService emailService;
+    private ExecutorService executorService;
+
     @Override
     public void init() throws ServletException {
         try {
             HmacSHA256 = Mac.getInstance("HmacSHA256");
             HmacSHA256.init(new SecretKeySpec(KEY2.getBytes("UTF-8"), "HmacSHA256"));
-            
-            
+
+            EmailService service = new EmailService(new GmailSender());
+            this.emailService = service;
+
+            this.executorService = Executors.newFixedThreadPool(10);
+
         } catch (Exception e) {
             throw new ServletException("Failed to initialize HMAC", e);
         }
@@ -101,17 +114,29 @@ public class CallbackServlet extends HttpServlet {
                 String appTransId = data.optString("app_trans_id", ""); // Lấy mã giao dịch
                 long zpTransId = data.optLong("zp_trans_id", 0);
                 long amount = data.optLong("amount", 0);
-                
+
+                String emailUser = data.optString("app_user");
+
                 int orderId = extractOrderNumber(appTransId);
-                
-                Payment payment = new Payment(0, orderId, null, "Completed", 
-                        appTransId, (double)amount);
-                
+
+                Payment payment = new Payment(0, orderId, null, "Completed",
+                        appTransId, (double) amount);
+
                 OrderDAO orderDAO = new OrderDAO();
-                if(!orderDAO.insertPayment(payment)){
+                if (!orderDAO.insertPayment(payment)) {
                     throw new Exception("Inert payment failed");
                 }
-                
+
+                String messageText = buildEmailMessage(orderId);
+                Runnable emailTask = () -> {
+                    try {
+                        emailService.sendEmail(emailUser, "Confirm Order!", messageText);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                };
+
+                executorService.submit(emailTask);
 
                 logger.info("Cập nhật trạng thái đơn hàng thành công: app_trans_id = " + appTransId);
                 logger.info("ZaloPay transaction id: " + zpTransId);
@@ -125,7 +150,7 @@ public class CallbackServlet extends HttpServlet {
             result.put("return_code", 0);
             result.put("return_message", ex.getMessage());
             logger.severe("Lỗi callback: " + ex.getMessage());
-                                  
+
         }
 
         // Trả kết quả về cho ZaloPay
@@ -134,20 +159,38 @@ public class CallbackServlet extends HttpServlet {
 
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+    @Override
+    public void destroy() {
+
+        executorService.shutdown();
+        super.destroy();
+    }
+
     @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
-    
+
     public static int extractOrderNumber(String input) {
-        String[] parts = input.split("_"); 
-        return Integer.parseInt(parts[1]); 
+        String[] parts = input.split("_");
+        return Integer.parseInt(parts[1]);
+    }
+
+    private String buildEmailMessage(int orderId) {
+        StringBuilder message = new StringBuilder();
+
+        message.append("<html>");
+        message.append("<body>");
+        message.append("<h1>Thank You for Your Purchase!</h1>");
+        message.append("<p>Dear Customer,</p>");
+        message.append("<p>Thank you for your payment. Your order ID is <strong>").append(orderId).append("</strong>.</p>");
+        message.append("<p>We appreciate your business and hope you enjoy your purchase.</p>");
+        message.append("<p>Sincerely,</p>");
+        message.append("<p>TungShop</p>");
+        message.append("</body>");
+        message.append("</html>");
+
+        return message.toString();
     }
 
 }

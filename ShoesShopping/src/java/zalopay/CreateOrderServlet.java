@@ -45,13 +45,14 @@ public class CreateOrderServlet extends HttpServlet {
             
             String orderId = request.getParameter("orderId");
             double amount = Double.parseDouble(request.getParameter("amount"));
+            String emailCustomer = request.getParameter("email");
             
             // Tạo dữ liệu đơn hàng
             Map<String, Object> order = new HashMap<>();
             order.put("app_id", ZaloPayConfig.APP_ID);
             order.put("app_trans_id", ZaloPayConfig.getCurrentTimeString("yyMMdd") + "_" + orderId);
             order.put("app_time", System.currentTimeMillis());
-            order.put("app_user", "user123");
+            order.put("app_user", emailCustomer);
             order.put("amount", (int)amount); // Số tiền cố định, bạn có thể lấy từ form
             order.put("description", "Payment for order #" + orderId);
             order.put("bank_code", "zalopayapp");
