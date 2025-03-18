@@ -5,7 +5,6 @@
 package zalopay;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -44,21 +42,22 @@ public class CreateOrderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            Random rand = new Random();
-            int randomId = rand.nextInt(1000000);
-
+            
+            String orderId = request.getParameter("orderId");
+            double amount = Double.parseDouble(request.getParameter("amount"));
+            
             // Tạo dữ liệu đơn hàng
             Map<String, Object> order = new HashMap<>();
             order.put("app_id", ZaloPayConfig.APP_ID);
-            order.put("app_trans_id", ZaloPayConfig.getCurrentTimeString("yyMMdd") + "_" + randomId);
+            order.put("app_trans_id", ZaloPayConfig.getCurrentTimeString("yyMMdd") + "_" + orderId);
             order.put("app_time", System.currentTimeMillis());
             order.put("app_user", "user123");
-            order.put("amount", 50000); // Số tiền cố định, bạn có thể lấy từ form
-            order.put("description", "Payment for order #" + randomId);
-            order.put("bank_code", "SBIS");
+            order.put("amount", (int)amount); // Số tiền cố định, bạn có thể lấy từ form
+            order.put("description", "Payment for order #" + orderId);
+            order.put("bank_code", "zalopayapp");
             order.put("callback_url", ZaloPayConfig.CALLBACK_URL);
             order.put("item", "[]");
-            order.put("embed_data", "{}");
+            order.put("embed_data", "{\"preferred_payment_method\": [\"zalopayapp\"], \"redirecturl\": \"http://localhost:9999/ShoesShopping/home\"}");
 
             // Tạo chuỗi hmac_input
             String data = order.get("app_id") + "|"

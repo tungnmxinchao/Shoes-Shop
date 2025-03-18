@@ -19,7 +19,7 @@ public class ZaloPayConfig {
     public static final String KEY1 = "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn";
     public static final String KEY2 = "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf";
     public static final String ENDPOINT = "https://sb-openapi.zalopay.vn/v2/create";
-    public static final String CALLBACK_URL = "https://1aae-118-71-223-185.ngrok-free.app/ZaloPay/callback";
+    public static final String CALLBACK_URL = "https://fc44-58-187-56-45.ngrok-free.app/ShoesShopping/callback";
 
     public static String getCurrentTimeString(String format) {
         Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT+7"));

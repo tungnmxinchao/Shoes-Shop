@@ -6,7 +6,7 @@ package dal;
 
 import entity.Cart;
 import entity.Order;
-import jakarta.servlet.http.HttpSession;
+import entity.Payment;
 import java.sql.*;
 import java.util.List;
 
@@ -72,4 +72,23 @@ public class OrderDAO extends DBContext {
         return -1;
     }
 
+    public boolean insertPayment(Payment payment) {
+        String sql = "INSERT INTO [dbo].[tblPayment] ([orderID], [paymentStatus], [transactionID], [totalAmount]) \n"
+                + "VALUES (?, ?, ?, ?)";
+
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, payment.getOrderId());
+            ps.setString(2, payment.getPaymentStatus());
+            ps.setString(3, payment.getTransactionId());
+            ps.setDouble(4, payment.getTotalAmount());
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; 
+
+        } catch (SQLException e) {
+            System.out.println("Error inserting payment: " + e.getMessage());
+        }
+        return false; 
+    }
 }

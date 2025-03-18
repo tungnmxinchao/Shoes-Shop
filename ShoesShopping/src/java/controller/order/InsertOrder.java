@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import utils.CartUtils;
 import java.sql.Timestamp;
+
 /**
  *
  * @author TNO
@@ -45,12 +46,16 @@ public class InsertOrder extends HttpServlet {
 
         Order order = new Order(0, null, total, user);
 
-        if (orderDAO.insertOrder(order, cart) != -1) {
+        int orderId = orderDAO.insertOrder(order, cart);
+        
+        
+
+        if ( orderId != -1) {
 
             HttpSession sesson = request.getSession();
-            order.setOrderId(userId);
+            order.setOrderId(orderId);
             order.setOrderDate(new Timestamp(System.currentTimeMillis()));
-            
+
             sesson.setAttribute("order", order);
             sesson.setAttribute("cart", cart);
 

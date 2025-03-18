@@ -137,6 +137,7 @@
 
                 <div class="payment-button" style="text-align: right;">
                     <form action="createOrder" method="post">
+                         <input type="hidden" name="amount" value="${order.total}">  
                         <input type="hidden" name="orderId" value="${order.orderId}">                   
                         <button type="submit" class="site-btn">Proceed to Payment</button>
                     </form>

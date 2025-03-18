@@ -4,6 +4,8 @@
  */
 package zalopay;
 
+import dal.OrderDAO;
+import entity.Payment;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -34,6 +36,8 @@ public class CallbackServlet extends HttpServlet {
         try {
             HmacSHA256 = Mac.getInstance("HmacSHA256");
             HmacSHA256.init(new SecretKeySpec(KEY2.getBytes("UTF-8"), "HmacSHA256"));
+            
+            
         } catch (Exception e) {
             throw new ServletException("Failed to initialize HMAC", e);
         }
@@ -97,8 +101,18 @@ public class CallbackServlet extends HttpServlet {
                 String appTransId = data.optString("app_trans_id", ""); // Lấy mã giao dịch
                 long zpTransId = data.optLong("zp_trans_id", 0);
                 long amount = data.optLong("amount", 0);
+                
+                int orderId = extractOrderNumber(appTransId);
+                
+                Payment payment = new Payment(0, orderId, null, "Completed", 
+                        appTransId, (double)amount);
+                
+                OrderDAO orderDAO = new OrderDAO();
+                if(!orderDAO.insertPayment(payment)){
+                    throw new Exception("Inert payment failed");
+                }
+                
 
-                // TODO: Cập nhật trạng thái đơn hàng trong database
                 logger.info("Cập nhật trạng thái đơn hàng thành công: app_trans_id = " + appTransId);
                 logger.info("ZaloPay transaction id: " + zpTransId);
                 logger.info("Số tiền: " + amount);
@@ -111,6 +125,7 @@ public class CallbackServlet extends HttpServlet {
             result.put("return_code", 0);
             result.put("return_message", ex.getMessage());
             logger.severe("Lỗi callback: " + ex.getMessage());
+                                  
         }
 
         // Trả kết quả về cho ZaloPay
@@ -128,5 +143,11 @@ public class CallbackServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    
+    public static int extractOrderNumber(String input) {
+        String[] parts = input.split("_"); 
+        return Integer.parseInt(parts[1]); 
+    }
 
 }
