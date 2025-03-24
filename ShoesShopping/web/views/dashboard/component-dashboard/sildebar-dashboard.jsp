@@ -70,18 +70,23 @@
                     <div class="collapse" id="base">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="../components/avatars.html">
+                                <a href="manage-user">
                                     <span class="sub-item">User</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="../components/buttons.html">
+                                <a href="manage-product">
                                     <span class="sub-item">Product</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="../components/buttons.html">
+                                <a href="manage-order">
                                     <span class="sub-item">Order</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="manage-payment">
+                                    <span class="sub-item">Payment</span>
                                 </a>
                             </li>
 

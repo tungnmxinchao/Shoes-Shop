@@ -6,11 +6,13 @@ package controller.customer;
 
 import dal.CartDAO;
 import entity.Cart;
+import entity.Users;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -22,8 +24,14 @@ public class ViewCart extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession sesson = request.getSession();
+
+        Users user = (Users) sesson.getAttribute("user");
+
+        int userId = user.getUserId();
+
         CartDAO cartDAO = new CartDAO();
-        List<Cart> cart = cartDAO.getCartByUserId(1);
+        List<Cart> cart = cartDAO.getCartByUserId(userId);
 
         double totalCart = caculatorCart(cart);
 

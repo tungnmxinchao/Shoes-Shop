@@ -11,7 +11,7 @@
 <html lang="en">
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Datatables - Kaiadmin Bootstrap 5 Admin Dashboard</title>
+        <title>Shoes Shop</title>
         <meta
             content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
             name="viewport"
@@ -71,7 +71,7 @@
                     <div class="container">
                         <div class="page-inner">
                             <div class="page-header">
-                                <h3 class="fw-bold mb-3">DataTables.Net</h3>
+                                <h3 class="fw-bold mb-3">ShoesShop.com</h3>
                                 <ul class="breadcrumbs mb-3">
                                     <li class="nav-home">
                                         <a href="#">

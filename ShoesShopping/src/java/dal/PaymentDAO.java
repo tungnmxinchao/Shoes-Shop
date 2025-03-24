@@ -44,6 +44,25 @@ public class PaymentDAO {
         return payments;
     }
 
+    public Payment findPaymentById(int paymentId) {
+        Payment payment = null;
+        try {
+            String query = "SELECT * FROM tblPayment WHERE paymentID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, paymentId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                payment = new Payment(rs.getInt("paymentID"), rs.getInt("orderID"),
+                        rs.getTimestamp("paymentDate"), rs.getString("paymentStatus"),
+                        rs.getString("transactionID"), rs.getDouble("totalAmount"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return payment; // Return the payment (null if not found)
+    }
+
     public boolean updatePayment(Payment payment) {
         try {
             String query = "UPDATE tblPayment SET orderID = ?, paymentDate = ?, paymentStatus = ?, transactionID = ?, totalAmount = ? WHERE paymentID = ?";

@@ -1,11 +1,10 @@
-<%-- 
-    Document   : manage-product
+<%--
+    Document   : manage-user
     Created on : Mar 24, 2025, 10:10:54 AM
     Author     : TNO
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -88,7 +87,7 @@
                                         <i class="icon-arrow-right"></i>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#">Product Management</a>
+                                        <a href="#">User Management</a>
                                     </li>
                                 </ul>
                             </div>
@@ -96,12 +95,12 @@
                                 <div class="col-md-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h4 class="card-title">Product Management</h4>
+                                            <h4 class="card-title">User Management</h4>
                                         </div>
 
                                         <div class="card-body">
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                                                Add Product
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                                Add User
                                             </button>
 
                                             <div class="table-responsive">
@@ -112,61 +111,48 @@
                                                     <thead>
                                                         <tr>
                                                             <th>ID</th>
-                                                            <th>Name</th>
-                                                            <th>Image</th>
-                                                            <th>Price</th>
-                                                            <th>Quantity</th>
-                                                            <th>Category</th>
-                                                            <th>Status</th>
+                                                            <th>Full Name</th>
+                                                            <th>Address</th>
+                                                            <th>Birthday</th>
+                                                            <th>Phone</th>
+                                                            <th>Email</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tfoot>
                                                         <tr>
                                                             <th>ID</th>
-                                                            <th>Name</th>
-                                                            <th>Image</th>
-                                                            <th>Price</th>
-                                                            <th>Quantity</th>
-                                                            <th>Category</th>
-                                                            <th>Status</th>
+                                                            <th>Full Name</th>
+                                                            <th>Address</th>
+                                                            <th>Birthday</th>
+                                                            <th>Phone</th>
+                                                            <th>Email</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
-                                                    <c:forEach items="${products}" var="products">
+                                                    <c:forEach items="${users}" var="user">
                                                         <tr>
-                                                            <td>${products.productID}</td>
-                                                            <td>${products.productName}</td>
-                                                            <td>
-                                                                <img style="width: 50px; height: 50px; object-fit: cover;" src="${products.image}" alt="alt"/>
-                                                            </td>
-                                                            <td><fmt:formatNumber value="${products.price}" type="currency" currencyCode="VND" maxFractionDigits="0"/></td>
-                                                            <td>${products.quantity}</td>
-                                                            <td>${products.category.categoryName}</td>
-                                                            <td>
-                                                                <c:if test="${products.status == 1}">
-                                                                    <span class="status-active">Active</span>
-                                                                </c:if>
-                                                                <c:if test="${products.status == 0}">
-                                                                    <span class="status-blocked">Blocked</span>
-                                                                </c:if>
-                                                            </td>
+                                                            <td>${user.userId}</td>
+                                                            <td>${user.fullName}</td>
+                                                            <td>${user.address}</td>
+                                                            <td>${user.birthday}</td>
+                                                            <td>${user.phone}</td>
+                                                            <td>${user.email}</td>
                                                             <td>
                                                                 <div class="form-button-action">
                                                                     <!-- Edit Button -->
-                                                                    <a type="button" href="edit-product?productId=${products.productID}" class="btn btn-link btn-primary btn-lg" data-bs-toggle="tooltip" title="Edit Task">
+                                                                    <a type="button" href="edit-user?userId=${user.userId}" class="btn btn-link btn-primary btn-lg" data-bs-toggle="tooltip" title="Edit User">
                                                                         <i class="fa fa-edit"></i>
                                                                     </a>
                                                                     <!-- Delete Button -->
-                                                                    <a type="button" href="delete-product?productId=${products.productID}" class="btn btn-link btn-danger" data-bs-toggle="tooltip" title="Remove">
+                                                                    <a type="button" href="delete-user?userId=${user.userId}" class="btn btn-link btn-danger" data-bs-toggle="tooltip" title="Remove">
                                                                         <i class="fa fa-times"></i>
                                                                     </a>
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>
-
                                                 </tbody>
                                             </table>
                                         </div>
@@ -180,21 +166,22 @@
                 <jsp:include page="component-dashboard/footer-dashboard.jsp"></jsp:include>
                 </div>
             </div>
-        <jsp:include page="component-dashboard/modal-add-product.jsp"></jsp:include>
-        <!--   Core JS Files   -->
-        <script src="template-admin/assets/js/core/jquery-3.7.1.min.js"></script>
-        <script src="template-admin/assets/js/core/popper.min.js"></script>
-        <script src="template-admin/assets/js/core/bootstrap.min.js"></script>
+            <!-- Modal for Adding User (Optional, can be created separately) -->
+        <jsp:include page="component-dashboard/modal-add-user.jsp"></jsp:include>
+            <!--   Core JS Files   -->
+            <script src="template-admin/assets/js/core/jquery-3.7.1.min.js"></script>
+            <script src="template-admin/assets/js/core/popper.min.js"></script>
+            <script src="template-admin/assets/js/core/bootstrap.min.js"></script>
 
-        <!-- jQuery Scrollbar -->
-        <script src="template-admin/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-        <!-- Datatables -->
-        <script src="template-admin/assets/js/plugin/datatables/datatables.min.js"></script>
-        <!-- Kaiadmin JS -->
-        <script src="template-admin/assets/js/kaiadmin.min.js"></script>
-        <!-- Kaiadmin DEMO methods, don't include it in your project! -->
-        <script src="template-admin/assets/js/setting-demo2.js"></script>
-        <script>
+            <!-- jQuery Scrollbar -->
+            <script src="template-admin/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+            <!-- Datatables -->
+            <script src="template-admin/assets/js/plugin/datatables/datatables.min.js"></script>
+            <!-- Kaiadmin JS -->
+            <script src="template-admin/assets/js/kaiadmin.min.js"></script>
+            <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+            <script src="template-admin/assets/js/setting-demo2.js"></script>
+            <script>
             $(document).ready(function () {
                 $("#basic-datatables").DataTable({});
 
@@ -236,22 +223,22 @@
                 });
 
                 var action =
-                        '<td> <div class="form-button-action"> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task"> <i class="fa fa-edit"></i> </button> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove"> <i class="fa fa-times"></i> </button> </div> </td>';
+                        '<td> <div class="form-button-action"> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit User"> <i class="fa fa-edit"></i> </button> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove"> <i class="fa fa-times"></i> </button> </div> </td>';
 
                 $("#addRowButton").click(function () {
                     $("#add-row")
                             .dataTable()
                             .fnAddData([
-                                $("#addName").val(),
-                                $("#addPosition").val(),
-                                $("#addOffice").val(),
+                                $("#addUsername").val(),
+                                $("#addEmail").val(),
+                                $("#addFullName").val(),
                                 action,
                             ]);
                     $("#addRowModal").modal("hide");
                 });
             });
+
+
         </script>
     </body>
 </html>
-
-

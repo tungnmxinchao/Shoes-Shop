@@ -130,14 +130,14 @@
                                           type="number" 
                                           pattern="#,##0" /> VNĐ
                     </p>                  
-                    <p><strong>Full Name:</strong> nguyen manh tung</p>
-                    <p><strong>Email:</strong> thichsao11@gmail.com</p>
-                    <p><strong>Phone:</strong> 0849978689</p>
+                    <p><strong>Full Name:</strong> ${sessionScope.user.fullName}</p>
+                    <p><strong>Email:</strong> ${sessionScope.user.email}</p>
+                    <p><strong>Phone:</strong> ${sessionScope.user.phone}</p>
                 </div>
 
                 <div class="payment-button" style="text-align: right;">
                     <form action="createOrder" method="post">
-                        <input type="hidden" name="email" value="thichsao11@gmail.com">  
+                        <input type="hidden" name="email" value="${sessionScope.user.email}">  
                         <input type="hidden" name="amount" value="${order.total}">  
                         <input type="hidden" name="orderId" value="${order.orderId}">                   
                         <button type="submit" class="site-btn">Proceed to Payment</button>

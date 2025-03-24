@@ -8,11 +8,13 @@ import dal.CartDAO;
 import dal.ProductDAO;
 import entity.Cart;
 import entity.Products;
+import entity.Users;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 public class AddToCart extends HttpServlet {
     
@@ -32,13 +34,19 @@ public class AddToCart extends HttpServlet {
             
             CartDAO cartDAO = new CartDAO();
             
-            //example user lgoin has id = 1
-            Cart cart = cartDAO.getCartByUserIdAndProductId(1, productId);
+            HttpSession sesson = request.getSession();
+            
+            Users user = (Users) sesson.getAttribute("user");
+            
+            int userId = user.getUserId();
+            
+         
+            Cart cart = cartDAO.getCartByUserIdAndProductId(userId, productId);
             
             if(cart != null){
                 cartDAO.updateCart(cart.getCartID(), cart.getQuantity() + 1);
             }else{
-                cartDAO.addToCart(1, productId, 1);
+                cartDAO.addToCart(userId, productId, 1);
             }
             response.sendRedirect("viewCart");        
             
