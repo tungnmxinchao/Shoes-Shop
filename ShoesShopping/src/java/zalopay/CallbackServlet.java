@@ -138,10 +138,6 @@ public class CallbackServlet extends HttpServlet {
 
                 executorService.submit(emailTask);
 
-                logger.info("Cập nhật trạng thái đơn hàng thành công: app_trans_id = " + appTransId);
-                logger.info("ZaloPay transaction id: " + zpTransId);
-                logger.info("Số tiền: " + amount);
-
                 result.put("return_code", 1);
                 result.put("return_message", "Thành công");
             }

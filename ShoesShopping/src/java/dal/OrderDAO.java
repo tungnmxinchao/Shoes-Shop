@@ -7,8 +7,11 @@ package dal;
 import entity.Cart;
 import entity.Order;
 import entity.Payment;
+import entity.Role;
+import entity.Users;
 import java.sql.*;
 import java.util.List;
+import java.util.Vector;
 
 public class OrderDAO extends DBContext {
 
@@ -16,10 +19,72 @@ public class OrderDAO extends DBContext {
     private ResultSet rs;
     private Connection conn;
 
+    private Vector<Order> orders;
+
     public OrderDAO() {
         if (conn == null) {
             conn = new DBContext().connection;
         }
+        orders = new Vector<>();
+    }
+
+    public Vector<Order> findAllOrder() {
+        try {
+            String query = "SELECT o.orderID, o.orderDate, o.total, u.userID, u.fullName, u.password, u.address, u.birthday, u.phone, u.email, r.roleID, r.roleName "
+                    + "FROM tblOrder o "
+                    + "JOIN tblUsers u ON o.userID = u.userID "
+                    + "JOIN tblRoles r ON u.roleID = r.roleID";
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Role role = new Role(rs.getInt("roleID"), rs.getString("roleName"));
+                Users user = new Users(rs.getInt("userID"), rs.getString("fullName"), rs.getString("password"), rs.getString("address"),
+                        rs.getDate("birthday"), rs.getString("phone"), rs.getString("email"), role);
+                Order order = new Order(rs.getInt("orderID"), rs.getTimestamp("orderDate"), rs.getDouble("total"), user);
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    public Order findOrderById(int id) {
+        Order order = null;
+        try {
+            String query = "SELECT o.orderID, o.orderDate, o.total, u.userID, u.fullName, u.password, u.address, u.birthday, u.phone, u.email, r.roleID, r.roleName "
+                    + "FROM tblOrder o "
+                    + "JOIN tblUsers u ON o.userID = u.userID "
+                    + "JOIN tblRoles r ON u.roleID = r.roleID "
+                    + "WHERE o.orderID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                Role role = new Role(rs.getInt("roleID"), rs.getString("roleName"));
+                Users user = new Users(rs.getInt("userID"), rs.getString("fullName"), rs.getString("password"), rs.getString("address"),
+                        rs.getDate("birthday"), rs.getString("phone"), rs.getString("email"), role);
+                order = new Order(rs.getInt("orderID"), rs.getTimestamp("orderDate"), rs.getDouble("total"), user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return order;
+    }
+
+    public boolean updateOrder(Order order) {
+        try {
+            String query = "UPDATE tblOrder SET orderDate = ?, total = ?, userID = ? WHERE orderID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setTimestamp(1, order.getOrderDate());
+            ps.setDouble(2, order.getTotal());
+            ps.setInt(3, order.getUser().getUserId());
+            ps.setInt(4, order.getOrderId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public int insertOrder(Order order, List<Cart> cart) {
@@ -84,11 +149,11 @@ public class OrderDAO extends DBContext {
             ps.setDouble(4, payment.getTotalAmount());
 
             int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0; 
+            return rowsAffected > 0;
 
         } catch (SQLException e) {
             System.out.println("Error inserting payment: " + e.getMessage());
         }
-        return false; 
+        return false;
     }
 }

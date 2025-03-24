@@ -9,26 +9,20 @@ package entity;
  * @author TNO
  */
 public class Categories {
-    private String categoryId;
+    private int categoryId;
     private String categoryName;
-    private String describle;
 
-    public Categories() {
-    }
-    
-    //lombok
-
-    public Categories(String categoryId, String categoryName, String describle) {
+    public Categories(int categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
-        this.describle = describle;
     }
 
-    public String getCategoryId() {
+    // Getters and setters
+    public int getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(String categoryId) {
+    public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
 
@@ -40,18 +34,13 @@ public class Categories {
         this.categoryName = categoryName;
     }
 
-    public String getDescrible() {
-        return describle;
-    }
-
-    public void setDescrible(String describle) {
-        this.describle = describle;
-    }
-
     @Override
     public String toString() {
-        return "Categories{" + "categoryId=" + categoryId + ", categoryName=" + categoryName + ", describle=" + describle + '}';
+        return "Categories{" + "categoryId=" + categoryId + ", categoryName=" + categoryName + '}';
     }
+    
+    
+
     
     
     
