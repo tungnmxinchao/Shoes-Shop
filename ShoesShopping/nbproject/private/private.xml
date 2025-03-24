@@ -4,11 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/semester_fpt/Teaching-PRJ/Shoes-Code/Shoes-Shop/ShoesShopping/src/java/controller/dashboard/ManageProduct.java</file>
-            <file>file:/D:/semester_fpt/Teaching-PRJ/Shoes-Code/Shoes-Shop/ShoesShopping/src/java/entity/Payment.java</file>
-            <file>file:/D:/semester_fpt/Teaching-PRJ/Shoes-Code/Shoes-Shop/ShoesShopping/src/java/dal/ProductDAO.java</file>
+            <file>file:/D:/semester_fpt/Teaching-PRJ/Shoes-Code/Shoes-Shop/ShoesShopping/web/views/dashboard/edit-product.jsp</file>
+            <file>file:/D:/semester_fpt/Teaching-PRJ/Shoes-Code/Shoes-Shop/ShoesShopping/src/java/controller/dashboard/product/AddProduct.java</file>
+            <file>file:/D:/semester_fpt/Teaching-PRJ/Shoes-Code/Shoes-Shop/ShoesShopping/src/java/controller/dashboard/product/EditProduct.java</file>
+            <file>file:/D:/semester_fpt/Teaching-PRJ/Shoes-Code/Shoes-Shop/ShoesShopping/src/java/controller/dashboard/product/DeleteProduct.java</file>
             <file>file:/D:/semester_fpt/Teaching-PRJ/Shoes-Code/Shoes-Shop/ShoesShopping/web/views/dashboard/manage-product.jsp</file>
-            <file>file:/D:/semester_fpt/Teaching-PRJ/Shoes-Code/Shoes-Shop/ShoesShopping/src/java/entity/Role.java</file>
-            <file>file:/D:/semester_fpt/Teaching-PRJ/Shoes-Code/Shoes-Shop/ShoesShopping/src/java/entity/OrderDetails.java</file>
         </group>
     </open-files>
 </project-private>
