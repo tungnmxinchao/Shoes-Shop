@@ -30,29 +30,25 @@ public class InsertOrder extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //example user login = 1;
+        HttpSession sesson = request.getSession();
 
-        int userId = 1;
+        Users user = (Users) sesson.getAttribute("user");
+
+        int userId = user.getUserId();
 
         OrderDAO orderDAO = new OrderDAO();
         CartDAO cartDAO = new CartDAO();
 
         List<Cart> cart = cartDAO.getCartByUserId(userId);
 
-        Users user = new Users();
-        user.setUserId(userId);
-
         double total = CartUtils.caculatorCart(cart);
 
         Order order = new Order(0, null, total, user);
 
         int orderId = orderDAO.insertOrder(order, cart);
-        
-        
 
-        if ( orderId != -1) {
+        if (orderId != -1) {
 
-            HttpSession sesson = request.getSession();
             order.setOrderId(orderId);
             order.setOrderDate(new Timestamp(System.currentTimeMillis()));
 
