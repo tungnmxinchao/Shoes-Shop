@@ -49,6 +49,30 @@ public class OrderDAO extends DBContext {
         return orders;
     }
 
+    public Vector<Order> findAllOrderByUserId(int userId) {
+        Vector<Order> orders = new Vector<>();
+        try {
+            String query = "SELECT o.orderID, o.orderDate, o.total, u.userID, u.fullName, u.password, u.address, u.birthday, u.phone, u.email, r.roleID, r.roleName "
+                    + "FROM tblOrder o "
+                    + "JOIN tblUsers u ON o.userID = u.userID "
+                    + "JOIN tblRoles r ON u.roleID = r.roleID "
+                    + "WHERE o.userID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, userId);  // Thiết lập giá trị userID vào câu truy vấn
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Role role = new Role(rs.getInt("roleID"), rs.getString("roleName"));
+                Users user = new Users(rs.getInt("userID"), rs.getString("fullName"), rs.getString("password"), rs.getString("address"),
+                        rs.getDate("birthday"), rs.getString("phone"), rs.getString("email"), role);
+                Order order = new Order(rs.getInt("orderID"), rs.getTimestamp("orderDate"), rs.getDouble("total"), user);
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
     public Order findOrderById(int id) {
         Order order = null;
         try {
